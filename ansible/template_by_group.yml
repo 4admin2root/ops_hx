@@ -1,0 +1,7 @@
+{% for hostgroup in inventory.hosts|groupby('group') %}
+[{{ hostgroup.grouper }}]
+{% for host in hostgroup.list %}
+{{host.name}}
+{% endfor %}
+
+{% endfor %}
