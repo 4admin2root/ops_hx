@@ -11,23 +11,24 @@ import signal
 reload(sys)
 sys.setdefaultencoding('utf8')
 from Connalert import *
+from apscheduler.schedulers.background import BackgroundScheduler
 
-signal.signal(signal.SIGCHLD,signal.SIG_IGN)
-while True :
-   try :
-      pid = os.fork()
-      if pid == 0:
-       try :
-        c = Connalert('a.out','http://121.41.37.xx:8080/getallconnect','xx','xx','localhost',3306,'root','')
+def gotodo():
+    try :
+        c = Connalert('a.out','http://xx:8080/getallconnect','xx','xx','localhost',3306,'root','')
         c.getjson()
         c.domysql()
         c.doprint()
-        os._exit(0)
-        print 'children'
-       except Exception,e:
+    except Exception,e:
         print e
-   except OSError, e:
-     print e
-   print 'before sleep' 
-   time.sleep(60) 
-   print 'after sleep'
+if __name__ == '__main__':
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(gotodo, 'interval', minutes=1)
+    scheduler.start()
+    print('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
+
+    try:
+        while True:
+            time.sleep(2)
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown() 

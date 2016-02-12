@@ -154,7 +154,7 @@ if __name__ == '__main__':
          print e
          print "打开文件失败"
          sys.exit() 
-        c = Connalert('a.out','http://121.41.37.xx:8080/getallconnect','xx','xx','localhost',3306,'root','')
+        c = Connalert('a.out','http://xx:8080/getallconnect','xx','xx','localhost',3306,'root','')
         c.getjson()
         c.domysql()
         c.doprint()

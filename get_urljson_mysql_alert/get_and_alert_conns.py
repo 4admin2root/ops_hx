@@ -82,7 +82,7 @@ def domysql(js):
 
 
 if __name__ == '__main__':
- j = getjsonstr('http://121.41.37.18:8080/getallconnect','getlist','admin')
+ j = getjsonstr('http://xx:8080/getallconnect','xx','xx')
  emsg = domysql(j)
  if len(emsg) < 10 :
    for i in  emsg:

@@ -101,7 +101,7 @@ if __name__ == '__main__':
          print e
          print "打开文件失败"
          sys.exit()
-        c = Urlnetjson('http://121.41.37.xx:8080/getallconnect','xxx','xxxx')
+        c = Urlnetjson('http://xx:8080/getallconnect','xxx','xxxx')
         c.getjson()
         c.getnetjson()
         os.remove('/tmp/netjson.pid')
