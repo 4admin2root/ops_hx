@@ -9,6 +9,7 @@ import urllib2
 import json
 import sys
 import re
+import csv
 class Node :
      def __init__(self) :
          self.id = ''
@@ -65,12 +66,16 @@ class Urlnetjson:
      hosts = {}
      self.netjson.setversion(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
      try :
-        f = open('hosts.txt','r')
-        for line in f.readlines():
-            lhosts = line.split()
-            hosts[lhosts[0]]=lhosts[1]
+        reader = csv.reader(open('hosts.csv','r'))
+        for name,created_at,id,status,inner_ip,public_ip,ratelimit_in,ratelit_out,type,disks,region_id,zone_id,security_groups in reader:
+            if reader.line_num == 1:
+               continue
+            if inner_ip != '':
+               hosts[inner_ip]=name
+            if public_ip != '':
+               hosts[public_ip]=name
      except Exception,e :
-        print "读取hosts.txt文件失败"
+        print "读取hosts.csv文件失败"
      lnode = []
      for i in self.json :
          l = re.split('_|:',i['connect'])
@@ -101,7 +106,7 @@ if __name__ == '__main__':
          print e
          print "打开文件失败"
          sys.exit()
-        c = Urlnetjson('http://xx:8080/getallconnect','xxx','xxxx')
+        c = Urlnetjson('http://xx:8080/getallconnect','xx','xx')
         c.getjson()
         c.getnetjson()
         os.remove('/tmp/netjson.pid')
