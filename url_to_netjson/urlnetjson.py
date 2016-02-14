@@ -33,14 +33,15 @@ class Netjson:
  
 class Urlnetjson:
  __version__ = '0.1'
- __all__ = ['getjson', 'netjson', ]
+ __all__ = ['getjson', 'getnetjson','savetofile', ]
  __author__ = 'lvzj'
 
- def __init__(self,url,username,password):
+ def __init__(self,url,username,password,filew):
    self.Username = username
    self.Password = password
    self.Url = url
    self.json = ''
+   self.filew = filew
    self.netjson = Netjson()
 
  def getjson(self):
@@ -95,7 +96,16 @@ class Urlnetjson:
          else :
             node.label = i
          self.netjson.nodes.append(node.__dict__)
-     print json.dumps(self.netjson.__dict__,ensure_ascii = False)
+
+ def savetofile(self):
+     try :
+         fn = open(self.filew,'w')
+         wnetjson = json.dumps(self.netjson.__dict__,ensure_ascii = False)
+         fn.write(wnetjson)
+         fn.close()
+     except Exception,e :
+         print e
+
 if __name__ == '__main__':
         pidf = os.getpid()
         try :
@@ -104,9 +114,9 @@ if __name__ == '__main__':
             fpid.close()
         except Exception,e:
          print e
-         print "打开文件失败"
          sys.exit()
-        c = Urlnetjson('http://xx:8080/getallconnect','xx','xx')
+        c = Urlnetjson('http://xx:8080/getallconnect','xx','xx','/usr/share/nginx/html/test/data.json')
         c.getjson()
         c.getnetjson()
+        c.savetofile()
         os.remove('/tmp/netjson.pid')
