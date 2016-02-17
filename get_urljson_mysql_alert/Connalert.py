@@ -151,7 +151,6 @@ if __name__ == '__main__':
             fpid.write(str(pidf))
             fpid.close()
         except Exception,e:
-         print e
          print "打开文件失败"
          sys.exit() 
         c = Connalert('a.out','http://xx:8080/getallconnect','xx','xx','localhost',3306,'root','')
