@@ -24,42 +24,24 @@ except Exception,e:
      sys.exit()
 print response
 
-instance = ec2.create_instances(
+instances = ec2.create_instances(
     ImageId='ami-8d668cc9',
-    MinCount=1,
-    MaxCount=3,
+    MinCount=1,                             #please change
+    MaxCount=3,                             #please change
     KeyName='easemob',
-#    SecurityGroups=[
-#        'vpc-8b49b3ee'
-#    ],
     SecurityGroupIds=[
         'sg-a8df07cd'
     ],
-#    UserData='string',
-    InstanceType='t2.micro',                      ## important 
-#    Placement={
-#        'AvailabilityZone': 'string',
-#        'GroupName': 'string',
-#        'Tenancy': 'dedicated',
-#        'HostId': 'string',
-#        'Affinity': 'string'
-#    },
-#    KernelId='string',
-#    RamdiskId='string',
+    InstanceType='m3.large',                      ## please change 
     BlockDeviceMappings=[
         {
-#            'VirtualName': 'string',
             'DeviceName': '/dev/sdb',
             'Ebs': {
-                'VolumeSize': 10,
-                 #add another 10GB disk ?
+                'VolumeSize': 30,                ## please change
                 'DeleteOnTermination': True,
-                'VolumeType': 'standard',
-                 ## in product is gp2
-#                'Iops': 123,
+                'VolumeType': 'gp2',
                 'Encrypted': False
                     },
-#            'NoDevice': 'string'
         },
     ],
     Monitoring={
@@ -68,9 +50,9 @@ instance = ec2.create_instances(
     SubnetId='subnet-330ad756',
     DisableApiTermination= False,
     InstanceInitiatedShutdownBehavior='stop',
-    EbsOptimized=False # for test,in product please set true
-    IamInstanceProfile={
-        'Name': 'create_by_script'
-    },
+    #EbsOptimized=True, # for test,in product please set true
 )
-print instance
+for instance in instances:
+    tag = instance.create_tags(Tags=[{'Key':'Name','Value':'create-by-script'},])
+print "create instances as follow:"
+print instances
