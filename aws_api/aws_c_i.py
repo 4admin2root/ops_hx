@@ -5,6 +5,7 @@
 .aws/config
 .aws/credentials
 实现功能：输入创建instance的类型 数量 sdb磁盘空间GB 标签
+具体是否具有公网ip,取决于子网的设置,可以到aws console子网中查看
 """
 import boto3
 import sys
