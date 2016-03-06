@@ -64,6 +64,9 @@ class AwsCI:
         {
             'DeviceIndex': 0,
             'SubnetId': 'subnet-330ad756',
+            'Groups': [
+                'sg-a8df07cd',
+               ],
             'DeleteOnTermination': True,
             'AssociatePublicIpAddress': False
         },
