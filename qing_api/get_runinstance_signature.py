@@ -1,4 +1,11 @@
 #!/usr/bin/python
+"""
+created by lvzj
+
+please change the variables :
+qy_access_key_id
+qy_secret_access_key
+"""
 import datetime
 import time
 import base64
@@ -6,8 +13,8 @@ import hmac
 import urllib
 from hashlib import sha256
 
-qy_access_key_id = 'CRPOZDZRUDBDPTKNICRB'
-qy_secret_access_key='pjbLlNLMSszuW8IgSm35Oef6GRK2dsWhZtjcjHSK'
+qy_access_key_id = 'XXXXXXXXXXXXXXXXXXXX'
+qy_secret_access_key='XXXXXXXXXXXXXXXXXXXX'
 qytime = time.strftime("%Y-%m-%dT%H:%M:%SZ")
 print qytime
 qing = {
@@ -15,8 +22,8 @@ qing = {
   "access_key_id":qy_access_key_id,
   "action":"RunInstances",
   "image_id":"centos64x86a",
-  "instance_name":"demo",
-  "instance_type":"large_a",
+  "instance_name":"created_by_api",
+  "instance_type":"c2m4",
   "login_mode":"passwd",
   "login_passwd":"4MtpsL4SagJuh2PL",
   "signature_method":"HmacSHA256",

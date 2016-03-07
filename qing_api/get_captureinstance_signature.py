@@ -1,4 +1,11 @@
 #!/usr/bin/python
+"""
+created by lvzj
+
+please change the variables :
+qy_access_key_id
+qy_secret_access_key
+"""
 import datetime
 import time
 import base64
@@ -35,13 +42,10 @@ for i in qingsort :
       string_to_access += urllib.urlencode(i)
       string_to_access += '&'
 string_to_sign = string_to_sign[:-1]
-print string_to_sign
 h = hmac.new(qy_secret_access_key, digestmod=sha256)
 h.update(string_to_sign)
 sign = base64.b64encode(h.digest()).strip()
-print sign
 signature = urllib.quote_plus(sign)
-print signature
 string_to_access += 'signature='
 string_to_access += signature
 print string_to_access
