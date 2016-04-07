@@ -1,0 +1,5 @@
+MYTIME %{MONTHNUM2}-%{MONTHDAY} %{TIME}
+URIPARAMINPATH [^/^?]+
+URIPARAM_CUSTOM [^?/ ]+
+PARAM [A-Za-z0-9$.+!*'|(){},~@#%/:;_?\-\[\]<>]*
+APP_KEY [^ #]+#[^ #]+
