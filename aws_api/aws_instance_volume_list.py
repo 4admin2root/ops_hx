@@ -29,6 +29,6 @@ for instance in instances_all:
       row.append(dev['Ebs']['VolumeId'])
     writeri.writerow(row)
 
-writerv.writerow(['卷id','卷状态','空间大小GB','创建时间'])
+writerv.writerow(['卷id','卷状态','空间大小GB','创建时间','类型'])
 for volume in volumes_all:
-    writerv.writerow([volume.volume_id,volume.state,volume.size,volume.create_time])
+    writerv.writerow([volume.volume_id,volume.state,volume.size,volume.create_time,volume.volume_type])
