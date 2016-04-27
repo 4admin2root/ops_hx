@@ -41,15 +41,16 @@ class AwsImage:
     Description='created by aws_img.py',
     NoReboot= True,
     )
-    print 'New imageid is: '+res_image['ImageId']
+    print 'New imageid is:'+res_image['ImageId']
    except Exception,e:
        print e
        print "create instances image error,please check the parameters and error msg above" 
        sys.exit(1)
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
           print "command format : python scritfilename --instanceid  --imagename "
           print "\texample : python  aws_img.py --i-da52fb19 --ejabberd20160425"
+          sys.exit(1)
     try :
         instanceid = sys.argv[1][2:]
         image_name = sys.argv[2][2:]
