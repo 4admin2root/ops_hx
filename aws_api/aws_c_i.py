@@ -60,12 +60,12 @@ class AwsCI:
         },
     ],
     Monitoring={
-        'Enabled': False
+        'Enabled': True
     },
     SubnetId='subnet-330ad756',
     DisableApiTermination= False,
     InstanceInitiatedShutdownBehavior='stop',
-    #EbsOptimized=True, # for test,in product please set true
+    EbsOptimized=True, # for test,in product please set true
     )
    except Exception,e:
        print e

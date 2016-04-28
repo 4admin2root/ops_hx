@@ -56,7 +56,7 @@ class AwsCI:
         },
     ],
     Monitoring={
-        'Enabled': False
+        'Enabled': True
     },
     DisableApiTermination= False,
     InstanceInitiatedShutdownBehavior='stop',
@@ -71,7 +71,7 @@ class AwsCI:
             'AssociatePublicIpAddress': False
         },
     ],
-    #EbsOptimized=True, # for test,in product please set true
+    EbsOptimized=True, # for test,in product please set true
     )
    except Exception,e:
        print e

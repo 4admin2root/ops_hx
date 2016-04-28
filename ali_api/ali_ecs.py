@@ -2,9 +2,10 @@
 # -*- coding:utf-8 -*-
 """
 please change the accessKeyId accessKeySecret and Password
-search 'xxx'
 """
 import types
+import ConfigParser
+import os
 import sys
 import time
 import csv
@@ -31,8 +32,15 @@ class HX_aliecs:
 
     def __init__(self, region='cn-qingdao'):
         self.region = region
-        self.accessKeyId = 'Btw5QMNJq8qrdD8Q'
-        self.accessKeySecret = 'aJY6VZ55rAFURMly8HY903TidC0fav'
+        cf = ConfigParser.ConfigParser()
+        homepath = os.getenv("HOME")
+        try :
+            cf.read(homepath+"/.ali/credentials")
+            self.accessKeyId = cf.get("default","accessKeyId")
+            self.accessKeySecret = cf.get("default","accessKeySecret")
+        except Exception,e:
+            print e
+            sys.exit(1)
         self.clt = client.AcsClient(
             self.accessKeyId, self.accessKeySecret, self.region)
 #
@@ -61,7 +69,7 @@ class HX_aliecs:
             print e
             sys.exit(1)
         for i in zone_j['Zones']['Zone']:
-            print "ZoneId:"+i['ZoneId']
+            print "ZoneId: "+i['ZoneId']
 
     def listinstancetypes(self):
         request = DescribeInstanceTypesRequest.DescribeInstanceTypesRequest()
@@ -111,11 +119,11 @@ class HX_aliecs:
         request.set_SecurityGroupId(isg)
         request.set_ImageId(iimg)
         request.set_InstanceName(iname)
-        request.set_Description('xxx')
-        request.set_InternetChargeType('xxx')
+        request.set_Description('created by ali_ecs.py')
+        request.set_InternetChargeType('PayByBandwidth')
         request.set_InternetMaxBandwidthOut(ibw)
         request.set_ZoneId(izone)
-        request.set_Password('xxx')
+        request.set_Password('@505eb86c9ec79c@')
         request.set_SystemDiskSize(ids)
         if idssd == True:
             request.set_SystemDiskCategory('cloud_ssd')
@@ -159,7 +167,7 @@ class HX_aliecs:
             request.set_InstanceId(instance_j['InstanceId'])
             result = self.clt.do_action(request)
             pub_j = json.loads(result)
-            print "PublicIpAddress:"+pub_j['IpAddress']
+            print "PublicIpAddress: "+pub_j['IpAddress']
        #start instance
         request = StartInstanceRequest.StartInstanceRequest()
         request.set_InstanceId(instance_j['InstanceId'])
@@ -229,7 +237,7 @@ if __name__ == '__main__':
         "-p", "--withpubip", action="store_true",dest="withpubip",  help="with public ip ?")
     parser.add_option(
         "-r", "--region", dest="region", type="string",
-        help="name of region,as:" + "|".join(regionlist), default="cn-qingdao"
+        help="name of region,as: " + "|".join(regionlist), default="cn-qingdao"
          )
     if len(sys.argv) == 1:
         parser.print_help()
@@ -284,7 +292,7 @@ if __name__ == '__main__':
            print "data disk size is: " + str(options.id1s)
            print "image id is: " + options.iimg
            print "securitygroup id is: " + options.isg
-           print "zone is: " + str(options.izone)
+           print "zone is : " + str(options.izone)
            print "===================================="
            hx_aliecs.createinstance(options.iname,options.itype,options.iimg,options.isg,options.izone,options.ids,options.id1s,options.ibw,options.idssd,options.id1ssd,options.chargetype,options.withpubip)
            #hx_aliecs.getinstanceinfo_byid('i-23injsy2i')

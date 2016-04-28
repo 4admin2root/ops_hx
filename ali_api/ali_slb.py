@@ -8,6 +8,8 @@
 4.根据slb所在区域提供查询列表
 """
 import types
+import ConfigParser
+import os
 import sys
 import csv
 import json
@@ -20,6 +22,9 @@ from aliyunsdkslb.request.v20140515 import DescribeRegionsRequest
 from aliyunsdkslb.request.v20140515 import DescribeLoadBalancersRequest
 from aliyunsdkslb.request.v20140515 import DescribeLoadBalancerAttributeRequest
 from aliyunsdkecs.request.v20140526 import DescribeInstancesRequest
+from aliyunsdkslb.request.v20140515 import AddBackendServersRequest
+from aliyunsdkslb.request.v20140515 import RemoveBackendServersRequest
+from aliyunsdkslb.request.v20140515 import SetBackendServersRequest
 
 
 class HX_alislb:
@@ -30,8 +35,15 @@ class HX_alislb:
 
     def __init__(self, region='cn-qingdao'):
         self.region = region
-        self.accessKeyId = 'xxx'
-        self.accessKeySecret = 'xxx'
+        cf = ConfigParser.ConfigParser() 
+        homepath = os.getenv("HOME")
+        try :
+            cf.read(homepath+"/.ali/credentials") 
+            self.accessKeyId = cf.get("default","accessKeyId")
+            self.accessKeySecret = cf.get("default","accessKeySecret")
+        except Exception,e:
+            print e
+            sys.exit(1)
         self.clt = client.AcsClient(
             self.accessKeyId, self.accessKeySecret, self.region)
 #
@@ -51,7 +63,6 @@ class HX_alislb:
 # null is all
 
     def getslblist(self, slbid, instanceid):
-        print 'slb block start'
         request = DescribeLoadBalancersRequest.DescribeLoadBalancersRequest()
         request.set_accept_format('json')
         if len(slbid) != 0:
@@ -64,14 +75,17 @@ class HX_alislb:
             print e
             sys.exit(1)
         for i in region_j['LoadBalancers']['LoadBalancer']:
-            slbinfolist = [i['RegionIdAlias'], i['LoadBalancerName'], i[
-                'Address'], i['LoadBalancerStatus']]
+            lbname=''
+            try :
+                 lbname= i['LoadBalancerName']
+            except Exception,e:
+                 pass
+            slbinfolist = [i['RegionIdAlias'], lbname, i['Address'], i['LoadBalancerStatus']]
             request = DescribeLoadBalancerAttributeRequest.DescribeLoadBalancerAttributeRequest()
             request.set_accept_format('json')
             request.set_LoadBalancerId(i['LoadBalancerId'])
             result = self.clt.do_action(request)
             result_j = json.loads(result)
-            print 'slb block'
             slbinfolist.append(str(result_j['ListenerPorts']['ListenerPort']))
             serverids = result_j['BackendServers']['BackendServer']
             serverinfolist = []
@@ -84,10 +98,8 @@ class HX_alislb:
                     result_j = json.loads(result)
                     serverinfolist.append(
                         result_j['Instances']['Instance'][0]['InstanceName'])
-                    print "server block"
             else:
-                break
-
+                continue
             slbinfolist.append('|'.join(serverinfolist))
             print '\t'.join(slbinfolist)
             writer = csv.writer(
@@ -182,14 +194,40 @@ class HX_alislb:
             print 'LoadBalancerStatus:' + i['LoadBalancerStatus']
             print 'Address:' + i['Address']
 
-    def addbackendserver(self, slbid, instanceid):
-        pass
+    def addbackendserver(self, slbid, instanceid,weight=100):
+        request = AddBackendServersRequest.AddBackendServersRequest()
+        request.set_accept_format('json')
+        request.set_LoadBalancerId(slbid)
+        request.set_BackendServers("[{'ServerId':'"+instanceid+"','Weight':"+str(weight)+"}]")
+        try: 
+            result = self.clt.do_action(request)
+        except Exception,e:
+            print e
+        print result
 
     def removebackendserver(self, slbid, instanceid):
-        pass
-
-    def setbackendserver(self, slbid, instanceid, weight):
-        pass
+        request = RemoveBackendServersRequest.RemoveBackendServersRequest()
+        request.set_accept_format('json')
+        request.set_LoadBalancerId(slbid)
+        request.set_BackendServers("[\""+instanceid+"\"]")
+        result = self.clt.do_action(request)
+        try:
+            result = self.clt.do_action(request)
+        except Exception,e:
+            print e
+        print result
+ 
+    def setbackendserver(self, slbid, instanceid, weight=100):
+        request = SetBackendServersRequest.SetBackendServersRequest()
+        request.set_accept_format('json')
+        request.set_LoadBalancerId(slbid)
+        request.set_BackendServers("[{'ServerId':'"+instanceid+"','Weight':"+str(weight)+"}]")
+        result = self.clt.do_action(request)
+        try:
+            result = self.clt.do_action(request)
+        except Exception,e:
+            print e
+        print result
 
     def createloadbalancer(self, instanceid, weight):
         pass
@@ -283,3 +321,20 @@ if __name__ == '__main__':
             if type(options.instanceid) == types.NoneType:
                 options.instanceid = ''
             hx_alislb.getslblist(options.slbid, options.instanceid)
+        elif options.action == 'addserver':
+            if type(options.weight) == types.NoneType:
+                options.weight = 100
+            if type(options.slbid) == types.NoneType or type(options.instanceid) == types.NoneType :
+                print "please provide specific both of slbid and instanceid"
+                sys.exit(1)
+            hx_alislb.addbackendserver(options.slbid,options.instanceid,options.weight)
+        elif options.action == 'rmserver':
+            if type(options.slbid) == types.NoneType or type(options.instanceid) == types.NoneType :
+                print "please provide specific both of slbid and instanceid"
+                sys.exit(1)
+            hx_alislb.removebackendserver(options.slbid,options.instanceid)
+        elif options.action == 'chserver':
+            if type(options.slbid) == types.NoneType or type(options.instanceid) == types.NoneType :
+                print "please provide specific both of slbid and instanceid"
+                sys.exit(1)
+            hx_alislb.setbackendserver(options.slbid,options.instanceid,options.weight)
