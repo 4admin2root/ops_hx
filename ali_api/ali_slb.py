@@ -203,31 +203,26 @@ class HX_alislb:
             result = self.clt.do_action(request)
         except Exception,e:
             print e
-        print result
 
     def removebackendserver(self, slbid, instanceid):
         request = RemoveBackendServersRequest.RemoveBackendServersRequest()
         request.set_accept_format('json')
         request.set_LoadBalancerId(slbid)
         request.set_BackendServers("[\""+instanceid+"\"]")
-        result = self.clt.do_action(request)
         try:
             result = self.clt.do_action(request)
         except Exception,e:
             print e
-        print result
  
     def setbackendserver(self, slbid, instanceid, weight=100):
         request = SetBackendServersRequest.SetBackendServersRequest()
         request.set_accept_format('json')
         request.set_LoadBalancerId(slbid)
         request.set_BackendServers("[{'ServerId':'"+instanceid+"','Weight':"+str(weight)+"}]")
-        result = self.clt.do_action(request)
         try:
             result = self.clt.do_action(request)
         except Exception,e:
             print e
-        print result
 
     def createloadbalancer(self, instanceid, weight):
         pass
