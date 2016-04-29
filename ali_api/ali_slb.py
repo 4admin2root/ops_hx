@@ -80,7 +80,7 @@ class HX_alislb:
                  lbname= i['LoadBalancerName']
             except Exception,e:
                  pass
-            slbinfolist = [i['RegionIdAlias'], lbname, i['Address'], i['LoadBalancerStatus']]
+            slbinfolist = [i['RegionIdAlias'], i['LoadBalancerId'],lbname, i['Address'], i['LoadBalancerStatus']]
             request = DescribeLoadBalancerAttributeRequest.DescribeLoadBalancerAttributeRequest()
             request.set_accept_format('json')
             request.set_LoadBalancerId(i['LoadBalancerId'])
