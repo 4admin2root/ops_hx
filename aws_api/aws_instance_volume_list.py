@@ -24,7 +24,11 @@ volumes_all = ec2.volumes.filter()
 #write csv file
 writeri.writerow(['服务器tag','实例id','实例类型','可用区','实例状态','公有ip','私有ip','创建时间','卷id'])
 for instance in instances_all:
-    row = [instance.tags[0]['Value'],instance.instance_id,instance.instance_type,instance.placement['AvailabilityZone'],instance.state['Name'],instance.public_ip_address,instance.private_ip_address,instance.launch_time]
+    tag_name=''
+    for t in instance.tags:
+        if t['Key'] == 'Name':
+           tag_name=t['Value']
+    row = [tag_name,instance.instance_id,instance.instance_type,instance.placement['AvailabilityZone'],instance.state['Name'],instance.public_ip_address,instance.private_ip_address,instance.launch_time]
     for dev  in instance.block_device_mappings:
       row.append(dev['Ebs']['VolumeId'])
     writeri.writerow(row)
