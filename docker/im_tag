@@ -1,5 +1,3 @@
 REST_TAG=latest
 THRIFT_LOGIN_TAG=latest
 TOOLS_TAG=latest
-EJABBERD_DB_TAG=latest
-EJABBERD_CONN_TAG=latest
