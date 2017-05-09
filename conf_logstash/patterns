@@ -3,3 +3,5 @@ URIPARAMINPATH [^/^?]+
 URIPARAM_CUSTOM [^?/ ]+
 PARAM [A-Za-z0-9$.+!*'|(){},~@#%/:;_?\-\[\]<>]*
 APP_KEY [^ #]+#[^ #]+
+DATE_CN %{YEAR}[./-]%{MONTHNUM}[./-]%{MONTHDAY}
+DATESTAMP_CN %{DATE_CN}[- ]%{TIME}
